@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+
+    <script src="../static/assets/js/jquery/jquery-1.10.2.min.js"
+            th:src="@{/assets/js/jquery/jquery-1.10.2.min.js}"></script>
+    <script src="../static/assets/js/bootstrap/bootstrap.min.js"
+            th:src="@{/assets/js/bootstrap/bootstrap.min.js}"></script>
+
+</head>
+<body>
+<h2 style="text-align: center">登录界面</h2>
+<form name="login_form" style="text-align: center" method="post">
+    <label style="margin-right:20px ">账号：</label>
+    <input type="text" name="userName" id="login_userName"><br>
+    <label style="margin-right:20px">密码：</label>
+    <input type="text" name="passWord" id="login_passWord" style="margin-top:20px">
+
+    <br>
+    <button id="login_bt_sumbit" style="margin-top:20px;width: 50px;height: 25px">登录</button>
+</form>
+
+
+<script th:src="@{/js/login.js}"></script>
+
+</body>
+</html>

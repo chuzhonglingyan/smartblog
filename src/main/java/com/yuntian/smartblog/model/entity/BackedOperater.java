@@ -2,25 +2,22 @@ package com.yuntian.smartblog.model.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @Auther: yuntian
- * @Date: 2018/8/22 21:40
- * @Description: 前端用户信息
+ * @Date: 2018/8/22 21:36
+ * @Description: 后台角色
  */
-public class UserAccount implements Serializable {
+public class BackedOperater {
 
 
     private long id;
     private String userName;
-    private String realName;
 
     @JSONField(serialize = false)
     private String passWord;
 
-    private int age;
     private String phoneNumber;
     private String headPicture;
 
@@ -33,6 +30,7 @@ public class UserAccount implements Serializable {
     private int state;
 
     private int role;
+
 
     public long getId() {
         return id;
@@ -56,14 +54,6 @@ public class UserAccount implements Serializable {
 
     public void setPassWord(String passWord) {
         this.passWord = passWord;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
     }
 
     public String getPhoneNumber() {
@@ -112,31 +102,5 @@ public class UserAccount implements Serializable {
 
     public void setRole(int role) {
         this.role = role;
-    }
-
-    public String getRealName() {
-        return realName;
-    }
-
-    public void setRealName(String realName) {
-        this.realName = realName;
-    }
-
-
-    @Override
-    public String toString() {
-        return "UserAccount{" +
-                "id=" + id +
-                ", userName='" + userName + '\'' +
-                ", realName='" + realName + '\'' +
-                ", passWord='" + passWord + '\'' +
-                ", age=" + age +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", headPicture='" + headPicture + '\'' +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                ", state=" + state +
-                ", role=" + role +
-                '}';
     }
 }
