@@ -1,5 +1,9 @@
 package com.yuntian.smartblog.util.encrypt.product.rsa;
 
+import com.yuntian.smartblog.util.encrypt.Base64Utils;
+
+import org.apache.commons.codec.binary.Hex;
+
 import java.util.Map;
 
 /**
@@ -27,9 +31,9 @@ public class RSATester {
     public static void main(String[] args) throws Exception {
         System.err.println("公钥: \n\r" + publicKey);
         System.err.println("私钥： \n\r" + privateKey);
-        test();
+      //  test();
 //        testSign();
-//        testHttpSign();
+        testHttpSign();
     }
 
     static void test() throws Exception {
@@ -62,7 +66,7 @@ public class RSATester {
         System.err.println("测试参数：私钥加密——公钥解密");
         String param = "id=1&name=张三";
         byte[] encodedData = RSAUtils.encryptByPrivateKey(param.getBytes(), privateKey);
-        System.out.println("加密后：" + encodedData);
+        System.out.println("加密后：" + Base64Utils.encode(encodedData));
 
         byte[] decodedData = RSAUtils.decryptByPublicKey(encodedData, publicKey);
         System.out.println("解密后：" + new String(decodedData));
