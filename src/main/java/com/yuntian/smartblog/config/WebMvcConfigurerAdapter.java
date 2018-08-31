@@ -3,7 +3,10 @@ package com.yuntian.smartblog.config;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.yuntian.smartblog.exception.GlobalExceptionHandler;
 import com.yuntian.smartblog.interceptor.BackendLoginInterceptor;
+import com.yuntian.smartblog.interceptor.RequestBodyInterceptor;
+import com.yuntian.smartblog.interceptor.SignInterceptor;
 import com.yuntian.smartblog.interceptor.TokenInterceptor;
 
 import org.springframework.context.annotation.Bean;
@@ -11,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -67,6 +71,18 @@ public class WebMvcConfigurerAdapter implements WebMvcConfigurer {
         return new TokenInterceptor();
     }
 
+    @Bean
+    RequestBodyInterceptor RequestBodyInterceptor() {
+        return new RequestBodyInterceptor();
+    }
+
+
+    @Bean
+    SignInterceptor SignInterceptor() {
+        return new SignInterceptor();
+    }
+
+
     /**
      * 拦截器
      *
@@ -81,6 +97,14 @@ public class WebMvcConfigurerAdapter implements WebMvcConfigurer {
                 .excludePathPatterns("/error/**", "/api/**", "/user/**", "/assets/**", "/js/**");
 
         registry.addInterceptor(TokenInterceptor())
+                .addPathPatterns("/api/**")
+                .excludePathPatterns("api/login", "api/register");
+
+        registry.addInterceptor(RequestBodyInterceptor())
+                .addPathPatterns("/api/**");
+
+
+        registry.addInterceptor(SignInterceptor())
                 .addPathPatterns("/api/**")
                 .excludePathPatterns("api/login", "api/register");
     }
@@ -117,5 +141,12 @@ public class WebMvcConfigurerAdapter implements WebMvcConfigurer {
         //4、将convert添加到converters
         converters.add(fastConverter);
     }
+
+
+    @Override
+    public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
+        exceptionResolvers.add(new GlobalExceptionHandler());
+    }
+
 
 }

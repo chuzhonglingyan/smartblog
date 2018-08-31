@@ -13,10 +13,12 @@ import com.yuntian.smartblog.model.vo.PageInfoVo;
 import com.yuntian.smartblog.model.vo.UserAccountVo;
 import com.yuntian.smartblog.service.UserService;
 import com.yuntian.smartblog.util.AssertUtil;
+import com.yuntian.smartblog.util.PasswordUtil;
 import com.yuntian.smartblog.util.TokenUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,6 +37,7 @@ public class UserServiceImpl implements UserService {
     UserMapper userMapper;
 
     @Override
+    @Transactional
     public Result insertUser(UserAccount userAccount) {
         AssertUtil.isNotBlank(userAccount.getUserName(), "用户名为空");
         AssertUtil.isNotBlank(userAccount.getPassWord(), "密码为空");
@@ -42,10 +45,13 @@ public class UserServiceImpl implements UserService {
         if (userAccountTemp != null) {
             throw new BusinessException("已经存在该用户");
         }
+
+        userAccount.setPassWord(PasswordUtil.md5HexWithSalt(userAccount.getPassWord()));
         int resutStauts = userMapper.insertUser(userAccount);
         if (resutStauts <= 0) {
             throw new BusinessException("注册失败，请重新注册");
         }
+
         Result result = new Result();
         result.setMsg("注册成功");
         result.setCode(OK);
@@ -57,21 +63,27 @@ public class UserServiceImpl implements UserService {
         AssertUtil.isNotBlank(userAccount.getUserName(), "用户名为空");
         AssertUtil.isNotBlank(userAccount.getPassWord(), "密码为空");
         UserAccountVo userAccountVo = findUserByName(userAccount.getUserName());
+
+
+        AssertUtil.isNotTrue(PasswordUtil.verify(userAccount.getPassWord(), userAccountVo.getPassWord()), "密码错误");
+
         String token = TokenUtil.createToken(String.valueOf(userAccount.getId()));
         userAccountVo.setToken(token);
         //清楚token
         String useIdKey = RedisKey.getTokenKey(String.valueOf(userAccountVo.getId()));
-        String oldToken= (String) redisUtil.get(useIdKey);
-        redisUtil.remove(oldToken);
-        redisUtil.remove(useIdKey);
+        String oldToken = (String) redisUtil.get(useIdKey);
+        if (StringUtils.isNotBlank(oldToken)) {
+            redisUtil.remove(oldToken);
+        }
+        if (StringUtils.isNotBlank(useIdKey)) {
+            redisUtil.remove(useIdKey);
+        }
 
 
         redisUtil.set(RedisKey.getTokenKey(String.valueOf(userAccountVo.getId())), token, RedisKey.TOKEN_EXPIRE);//缓存当前用户的token
         redisUtil.set(token, userAccountVo, RedisKey.TOKEN_EXPIRE);//缓存当前用户信息
 
-        if (!StringUtils.equals(userAccount.getPassWord(), userAccountVo.getPassWord())) {
-            AssertUtil.isNotBlank(userAccount.getPassWord(), "密码错误");
-        }
+
         Result result = new Result();
         result.setMsg("登录成功");
         result.setData(userAccountVo);

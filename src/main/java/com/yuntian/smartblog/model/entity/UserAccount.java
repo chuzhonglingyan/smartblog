@@ -34,6 +34,8 @@ public class UserAccount implements Serializable {
 
     private int role;
 
+
+
     public long getId() {
         return id;
     }

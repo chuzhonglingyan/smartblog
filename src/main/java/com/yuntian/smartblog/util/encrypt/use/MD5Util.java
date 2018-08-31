@@ -1,5 +1,7 @@
-package com.yuntian.smartblog.util;
+package com.yuntian.smartblog.util.encrypt.use;
 
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +20,7 @@ public class MD5Util {
     static MessageDigest messageDigest = null;
 
     /**
-     * 判断新密码和旧密码是否正确  返回true 和 false
+     * 判断新字符串和字符串是否正确  返回true 和 false
      *
      * @param newStr
      * @param oldMD5Str
@@ -36,18 +38,15 @@ public class MD5Util {
      * @return 加密后的16进制的字符串
      */
     public final static String encoderByMd5(String source) {
-        String tmp = source.substring(0, 1)
-                + source.subSequence(source.length() - 1, source.length());
-        tmp = md5(tmp);
-        return md5(source + tmp);
+        if (StringUtils.isBlank(source)) {
+            return "";
+        }
+        String slat = source.substring(0, 1) + source.subSequence(source.length() - 1, source.length());
+        slat = md5(slat);
+        return md5(source + slat);
     }
 
     private static String md5(String source) {
-
-        if (logger.isDebugEnabled()) {
-        }
-        char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
-                'e', 'f'};
         try {
 
             byte[] strTemp = source.getBytes();
@@ -55,28 +54,15 @@ public class MD5Util {
             MessageDigest mdTemp = MessageDigest.getInstance("MD5");
             mdTemp.update(strTemp);
             byte[] md = mdTemp.digest();
-            int j = md.length;
-            char str[] = new char[j * 2];
-            int k = 0;
-            for (int i = 0; i < j; i++) {
-                byte b = md[i];
-                str[k++] = hexDigits[b >> 4 & 0xf];
-                str[k++] = hexDigits[b & 0xf];
-            }
-
-            if (logger.isDebugEnabled()) {
-                logger.debug("加密后的字符串：" + new String(str));
-            }
-            return new String(str);
+            return Hex.encodeHexString(md);
         } catch (Exception e) {
             logger.error("md5加密出错：" + source, e);
             return null;
         }
-
     }
 
 
-    public static String encodeByMD5(String str) {
+    private static String encodeByMD5(String str) {
         try {
             if (messageDigest == null)
                 messageDigest = MessageDigest.getInstance("MD5");
@@ -91,17 +77,13 @@ public class MD5Util {
         if (messageDigest == null)
             return "";
         byte[] byteArray = messageDigest.digest();
+        return new String(new Hex().encode(byteArray));
+    }
 
-        StringBuffer md5StrBuff = new StringBuffer();
-
-        for (int i = 0; i < byteArray.length; i++) {
-            if (Integer.toHexString(0xFF & byteArray[i]).length() == 1)
-                md5StrBuff.append("0").append(Integer.toHexString(0xFF & byteArray[i]));
-            else
-                md5StrBuff.append(Integer.toHexString(0xFF & byteArray[i]));
-        }
-
-        return md5StrBuff.toString();
+    public static void main(String[] args) {
+        System.out.println(encodeByMD5("123456"));
+        System.out.println(encoderByMd5("123456"));
+        System.out.println(checkMD5("123456", "b0bfee8fe33bc6a0234ddf40ccffc004"));
     }
 
 }

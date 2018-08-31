@@ -89,6 +89,13 @@
             <version>2.4</version>
         </dependency>
 
+        <!-- Base64编码需要  -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -177,6 +184,12 @@
             <artifactId>jjwt</artifactId>
             <version>0.9.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+
 
     </dependencies>
 

@@ -1,10 +1,12 @@
 package com.yuntian.smartblog.controller.mobile;
 
 import com.yuntian.smartblog.annotation.LoginRequired;
+import com.yuntian.smartblog.annotation.SignRequired;
 import com.yuntian.smartblog.base.Result;
 import com.yuntian.smartblog.cache.RedisUtil;
 import com.yuntian.smartblog.controller.AbstractController;
 import com.yuntian.smartblog.interceptor.TokenInterceptor;
+import com.yuntian.smartblog.model.dto.UserPageDTO;
 import com.yuntian.smartblog.model.entity.UserAccount;
 import com.yuntian.smartblog.service.UserService;
 
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -56,7 +59,7 @@ public class UserMoblieController extends AbstractController {
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @LoginRequired(value = false)
-    public Result registerPost(UserAccount user) {
+    public Result registerPost(@RequestBody UserAccount user) {
         Result result = userService.insertUser(user);
         return result;
     }
@@ -78,6 +81,43 @@ public class UserMoblieController extends AbstractController {
         return result;
     }
 
+
+    /**
+     * 功能描述:
+     *
+     * @param: 获取用户列表，需要用户权限
+     * @return:
+     * @auther: yuntian
+     * @date: 2018/8/19 19:49
+     */
+    @RequestMapping(value = "/getUserList.json")
+    @SignRequired(value = true)
+    public Result getUserListByDto(@RequestBody(required = false) UserPageDTO userPageDTO) {
+        if (userPageDTO==null){
+            userPageDTO=new UserPageDTO();
+        }
+        Result result = userService.selectUserList(userPageDTO.getPageNum(), userPageDTO.getPageSize());
+        return result;
+    }
+
+
+    /**
+     * 功能描述:
+     *
+     * @param: 获取用户列表，需要用户权限
+     * @return:
+     * @auther: yuntian
+     * @date: 2018/8/19 19:49
+     */
+    @RequestMapping(value = "/getUserListByToken")
+    @SignRequired(value = true)
+    public Result getUserListByToken(@RequestParam(name = "pageNum", required = false) String pageNum,
+                                     @RequestParam(name = "pageSize", required = false) String pageSize) {
+        Result result = userService.selectUserList(pageNum, pageSize);
+        return result;
+    }
+
+
     /**
      * 功能描述:
      *
@@ -87,7 +127,8 @@ public class UserMoblieController extends AbstractController {
      * @date: 2018/8/19 19:49
      */
     @RequestMapping(value = "/getUserListByToken/{pageNum}/{pageSize}")
-    public Result getUserListByToken(@PathVariable(name = "pageNum", required = false) String pageNum,
+    @SignRequired(value = true)
+    public Result getUserListRestful(@PathVariable(name = "pageNum", required = false) String pageNum,
                                      @PathVariable(name = "pageSize", required = false) String pageSize) {
         Result result = userService.selectUserList(pageNum, pageSize);
         return result;
@@ -104,7 +145,7 @@ public class UserMoblieController extends AbstractController {
      */
     @RequestMapping("/logout")
     public Result logout(HttpServletRequest request) {
-        Result result=userService.loginOut(request.getHeader(TokenInterceptor.ACCESS_TOKEN));
+        Result result = userService.loginOut(request.getHeader(TokenInterceptor.ACCESS_TOKEN));
         return result;
     }
 

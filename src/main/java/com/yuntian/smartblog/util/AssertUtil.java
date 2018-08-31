@@ -26,8 +26,11 @@ public class AssertUtil {
         }
     }
 
-
-
+    public static void  isNotTrue(boolean flag,String msg){
+        if (!flag){
+            throw new BusinessException(msg);
+        }
+    }
 
 
 }
