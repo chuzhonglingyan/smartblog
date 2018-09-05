@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuntian.smartblog.mapper.BackedOperaterMapper">
+
+
+    <resultMap type="com.yuntian.smartblog.model.entity.BackedOperater" id="BaseResultMap">
+        <!-- column:库表的字段名 property:实体类里的属性名 -->
+        <id column="id" property="id" />
+        <result column="user_name" jdbcType="BIGINT" property="userName" />
+        <result column="pass_word" jdbcType="VARCHAR" property="passWord" />
+        <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
+        <result column="head_picture" jdbcType="VARCHAR" property="headPicture" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="state" jdbcType="BIGINT" property="state" />
+        <result column="role" jdbcType="BIGINT" property="role" />
+    </resultMap>
+
+
+    <sql id="BASE_TABLE">backed_operater</sql>
+
+    <insert id="insertBackedOperater"
+        parameterType="com.yuntian.smartblog.model.entity.BackedOperater">
+
+        INSERT INTO
+        <include refid="BASE_TABLE" />
+        (user_name,pass_word)
+        VALUES(#{userName},#{passWord})
+    </insert>
+
+
+    <select id="findBackedOperaterByName" resultMap="BaseResultMap">
+        SELECT * FROM
+        <include refid="BASE_TABLE" />
+        where is_delete =0 and user_name=#{userName}
+    </select>
+
+
+    <select id="findBackedOperaterByNameAndPassWord" resultMap="BaseResultMap">
+        SELECT * FROM
+        <include refid="BASE_TABLE" />
+        where is_delete =0 and user_name=#{userName}
+        and pass_word=#{passWord}
+    </select>
+
+    <select id="selectBackedOperaterList" resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM
+        <include refid="BASE_TABLE" />
+        where is_delete =0
+    </select>
+
+
+</mapper>

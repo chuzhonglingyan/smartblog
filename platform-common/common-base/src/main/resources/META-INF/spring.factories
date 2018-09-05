@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.yuntian.common.base.config.ContainerConfig,\
+com.yuntian.common.base.config.DruidConfiguration,\
+com.yuntian.common.base.config.RedisConfig

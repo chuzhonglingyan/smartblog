@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: Mobile Client
+  profiles:
+    active: @profileActive@
+

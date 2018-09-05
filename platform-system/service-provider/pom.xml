@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.yuntian</groupId>
+        <artifactId>platform-system</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>service-provider</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <name>service-provider</name>
+    <description>Demo project for Spring Boot</description>
+    <properties>
+        <start-class>com.yuntian.smartblog.ServiceProviderApplication</start-class>
+    </properties>
+
+
+    <profiles>
+        <profile>
+            <id>local</id>
+            <properties>
+                <profileActive>local</profileActive>
+
+                <!-- dubbo -->
+                <dubbo.container>logback,spring</dubbo.container>
+                <dubbo.shutdown.hook>true</dubbo.shutdown.hook>
+                <dubbo.application.name>service-provider</dubbo.application.name>
+                <dubbo.application.owner>yuntian</dubbo.application.owner>
+                <dubbo.registry.protocol>zookeeper</dubbo.registry.protocol>
+                <dubbo.registry.address>127.0.0.1:2181</dubbo.registry.address>
+                <dubbo.registry.client>curator</dubbo.registry.client>
+                <dubbo.registry.file>tmp/service-provider.cache</dubbo.registry.file>
+                <dubbo.protocol.dubbo.port>20000</dubbo.protocol.dubbo.port>
+                <dubbo.application.logger>slf4j</dubbo.application.logger>
+                <dubbo.logback.level>info</dubbo.logback.level>
+                <dubbo.monitor.protocol> </dubbo.monitor.protocol>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+
+
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profileActive>dev</profileActive>
+
+                <!-- dubbo -->
+                <dubbo.container>logback,spring</dubbo.container>
+                <dubbo.shutdown.hook>true</dubbo.shutdown.hook>
+                <dubbo.application.name>service-provider</dubbo.application.name>
+                <dubbo.application.owner>yuntian</dubbo.application.owner>
+                <dubbo.registry.protocol>zookeeper</dubbo.registry.protocol>
+                <dubbo.registry.address>127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183</dubbo.registry.address>
+                <dubbo.registry.client>curator</dubbo.registry.client>
+                <dubbo.registry.file>/data/zookeeper/service-provider.cache</dubbo.registry.file>
+                <dubbo.protocol.dubbo.port>20000</dubbo.protocol.dubbo.port>
+                <dubbo.application.logger>slf4j</dubbo.application.logger>
+                <dubbo.logback.level>error</dubbo.logback.level>
+                <dubbo.monitor.protocol>registry</dubbo.monitor.protocol>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profileActive>prod</profileActive>
+                <!-- dubbo -->
+                <dubbo.container>logback,spring</dubbo.container>
+                <dubbo.shutdown.hook>true</dubbo.shutdown.hook>
+                <dubbo.application.name>service-provider</dubbo.application.name>
+                <dubbo.application.owner>yuntian</dubbo.application.owner>
+                <dubbo.registry.protocol>zookeeper</dubbo.registry.protocol>
+                <dubbo.registry.address>127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183</dubbo.registry.address>
+                <dubbo.registry.client>curator</dubbo.registry.client>
+                <dubbo.registry.file>/data/zookeeper/service-provider.cache</dubbo.registry.file>
+                <dubbo.protocol.dubbo.port>20000</dubbo.protocol.dubbo.port>
+                <dubbo.application.logger>slf4j</dubbo.application.logger>
+                <dubbo.logback.level>error</dubbo.logback.level>
+                <dubbo.monitor.protocol>registry</dubbo.monitor.protocol>
+            </properties>
+        </profile>
+    </profiles>
+
+
+
+    <dependencies>
+        <dependency>
+            <groupId>com.yuntian</groupId>
+            <artifactId>service-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+        <finalName>service-provider</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+
+    </build>
+
+</project>

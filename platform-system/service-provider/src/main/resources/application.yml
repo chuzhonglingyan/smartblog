@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: Service Provider
+  profiles:
+    active: @profileActive@
